@@ -1,3 +1,7 @@
+const saveBtn = document.getElementById("save");
+
+const textInput = document.getElementById("text");
+const fileInput = document.getElementById("file");
 const lineWidth = document.getElementById("line-width");
 const color = document.getElementById("color");
 const colorOption = Array.from(document.getElementsByClassName("color-option"));
@@ -15,10 +19,11 @@ canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;
 
 ctx.lineWidth = lineWidth.value;
+ctx.lineCap = "round";
 let isPainting = false;
 let isFilling = false;
-
-
+let isErasing = false;
+let preColor;
 
 function onMove(event) {
     if(isPainting) {
@@ -55,10 +60,10 @@ function onColorClick(event) {
 function onModeClick() {
     if(isFilling) {
         isFilling = false;
-        modeBtn.innerText = "FILL";
+        modeBtn.innerText = "🩸";
     } else {
         isFilling = true;
-        modeBtn.innerText = "DRAW";
+        modeBtn.innerText = "🖌️";
     }
 }
 
@@ -69,15 +74,59 @@ function onCanvasClick() {
 }
 
 function onDestroyClick() {
+    ctx.save();
     ctx.fillStyle = "white"
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.restore();
 }
 
 function onEraserClick() {
-    ctx.strokeStyle = "white";
-    isFilling = false;
+    if(isErasing) {
+        eraserBtn.classList.remove("active");
+        ctx.restore();
+        isErasing = false;
+    } else {
+        ctx.save();
+        eraserBtn.classList.add("active");
+        ctx.strokeStyle = "white";
+        isFilling = false;
+        isErasing = true;
+    }
 }
 
+function onFileChange(event) {
+    console.dir(event.target);
+    const file = event.target.files[0];
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.src = url;
+
+    image.onload = function() {
+        ctx.drawImage(image, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        fileInput.value = "";
+    }
+}
+
+function onDoubleClick(event) {
+    const text = textInput.value;
+    if (text !== "") {
+        ctx.save();
+        ctx.lineWidth = 1;
+        ctx.font = "16px serif";
+        ctx.fillText(text, event.offsetX, event.offsetY);
+        ctx.restore();
+    }
+}
+
+function onSaveClick() {
+    const url =  canvas.toDataURL();
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "myDrawing.png";
+    a.click();
+}
+
+canvas.addEventListener("dblclick", onDoubleClick);
 canvas.addEventListener("mousemove", onMove);
 canvas.addEventListener("mousedown", onMousedown);
 canvas.addEventListener("mouseup", onMouseup);
@@ -92,3 +141,6 @@ colorOption.forEach(color => color.addEventListener("click", onColorClick));
 modeBtn.addEventListener("click", onModeClick);
 destroyBtn.addEventListener("click", onDestroyClick);
 eraserBtn.addEventListener("click", onEraserClick);
+
+fileInput.addEventListener("change", onFileChange);
+saveBtn.addEventListener("click", onSaveClick);

@@ -7,15 +7,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas></canvas>
-    <div class="input-area">
-        <input type="range" id="line-width" min="1" max="10" value="5" step="0.5">
+    <div class="container">
+        <div class="color-area">
         <input type="color" id="color">
-        <button id="mode-btn">FILL</button>
-        <button id="destroy-btn">DESTROY</button>
-        <button id="eraser-btn">ERASER</button>
-    </div>  
-    <div class="color-area">
         <div class="color-option" style="background-color:  #f3a683;"
         data-color="#f3a683"></div>
         <div class="color-option" style="background-color:  #f7d794;"
@@ -36,6 +30,21 @@
         data-color="#ea8685"></div>
         <div class="color-option" style="background-color:  #596275;"
         data-color="#596275"></div>
+        </div>
+        <canvas></canvas>
+        <div class="draw-area">
+            <input type="range" id="line-width" min="1" max="10" value="5" step="0.5">
+            <button id="mode-btn">🩸</button>
+            <button id="destroy-btn">🌊</button>
+            <button id="eraser-btn">🧽</button>
+        </div>
+    </div>
+    <div class="file-area">
+        <button id="save">SAVE</button>
+        <label for="file"> ADD FILE
+            <input type="file" accept="image/*" id="file" hidden>
+        </label>
+        <input type="text" placeholder="Write and double click" id="text">
     </div>
     <!-- <script src="app.js"></script> -->
     <script src="app2.js"></script>
