@@ -48,6 +48,7 @@ function onLineWidthChange(event) {
 function onColorChange(event) {
     ctx.strokeStyle = event.target.value;
     ctx.fillStyle = event.target.value;
+    stopEraser();
 }
 
 function onColorClick(event) {
@@ -55,9 +56,11 @@ function onColorClick(event) {
     ctx.strokeStyle = colorValue;
     ctx.fillStyle = colorValue;
     color.value = colorValue;
+    stopEraser();
 }
 
 function onModeClick() {
+    stopEraser();
     if(isFilling) {
         isFilling = false;
         modeBtn.innerText = "🩸";
@@ -82,16 +85,20 @@ function onDestroyClick() {
 
 function onEraserClick() {
     if(isErasing) {
-        eraserBtn.classList.remove("active");
-        ctx.restore();
-        isErasing = false;
+        stopEraser();
     } else {
         ctx.save();
         eraserBtn.classList.add("active");
         ctx.strokeStyle = "white";
         isFilling = false;
+        modeBtn.innerText = "🩸";
         isErasing = true;
     }
+}
+
+function stopEraser() {
+    eraserBtn.classList.remove("active");
+    isErasing = false;
 }
 
 function onFileChange(event) {
