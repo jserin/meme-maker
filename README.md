@@ -26,3 +26,72 @@
 - 그림을 내 컴퓨터에 png 파일로 다운로드
 - 컴퓨터에 있는 이미지 파일 업로드하고 화면 표시
 - input에 문자를 입력하고 캔버스 더블클릭시 해당 좌표에 추가
+
+---
+### 기능 구현 기록
+#### 이미지 파일 추가
+```html
+// html
+...
+<label for="file"> ADD FILE</label>
+<input type="file" accept="image/*" id="file" hidden>
+...
+```
+- input file이 이미지 파일만 받을 수 있게 accept 속성으로 제한
+
+```JavaScript
+// js
+const fileInput = document.getElementById("file");
+
+fileInput.addEventListener("change", onFileChange);
+
+function onFileChange(event) {
+    const file = event.target.files[0];
+    const url = URL.createObjectURL(file);
+    const image = new Image();
+    image.src = url;
+
+    image.onload = function() {
+        ctx.drawImage(image, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        fileInput.value = "";
+    }
+}
+```
+- 1개의 이미지 파일만 업로드
+- input 값이 변경되었을 때 선택된 파일의 url을 생성해서 이미지 생성
+- drawImage 메소드를 사용해 캔버스 전체에 표시
+- input의 값 비움
+
+#### 파일 저장
+```html
+// html
+...
+<button id="save">SAVE</button>
+...
+```
+
+```JavaScript
+// js
+const saveBtn = document.getElementById("save");
+
+saveBtn.addEventListener("click", onSaveClick);
+
+function onSaveClick() {
+    const url =  canvas.toDataURL();
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "myDrawing.png";
+    a.click();
+}
+```
+- canvas 내용을 dataUrl로 생성
+- a 태그 다운로드 속성 추가하여 생성
+- click 메소드 추가해야 파일 다운로드 실행됨
+
+---
+### 추가(할 수도 있는) 기능
+- 이미지 위치 조정
+- 폰트, 글자 사이즈 변경
+- 마우스 포인터 변경
+- undo, redo 기능
+  
