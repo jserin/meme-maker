@@ -95,14 +95,13 @@ function onEraserClick() {
 }
 
 function onFileChange(event) {
-    console.dir(event.target);
     const file = event.target.files[0];
     const url = URL.createObjectURL(file);
     const image = new Image();
     image.src = url;
 
     image.onload = function() {
-        ctx.drawImage(image, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.drawImage(image, 0, 0);
         fileInput.value = "";
     }
 }
